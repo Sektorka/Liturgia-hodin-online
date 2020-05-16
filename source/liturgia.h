@@ -378,17 +378,50 @@ extern const char *nazov_modlitby_jazyk[POCET_MODLITIEB + 1][POCET_JAZYKOV + 1];
 extern const char *nazov_Modlitby_jazyk[POCET_MODLITIEB + 1][POCET_JAZYKOV + 1];
 #define		nazov_Modlitby(a)	nazov_Modlitby_jazyk[a][_global_jazyk]
 
-// file templates for prayers
-#define TEMPLAT_INVITATORIUM     "m_invitat.htm"
-#define TEMPLAT_POSV_CITANIE     "m_posvcit.htm"
-#define TEMPLAT_RANNE_CHVALY     "m_rchvaly.htm"
-#define TEMPLAT_CEZ_DEN_9        "m_predpol.htm"
-#define TEMPLAT_CEZ_DEN_12       "m_napol.htm"
-#define TEMPLAT_CEZ_DEN_3        "m_popol.htm"
-#define TEMPLAT_VESPERY          "m_vespery.htm"
-#define TEMPLAT_KOMPLETORIUM     "m_komplet.htm"
-#define TEMPLAT_EMPTY            STR_EMPTY // MODL_VSETKY + MODL_DETAILY
-#define TEMPLAT_STATIC_TEXT      "m_text.htm" // MODL_NEURCENA
+#define TEMPLATE_PREFIX_HTML	"m"
+#define TEMPLATE_PREFIX_XML		"../m"
+
+#define TEMPLATE_POSTFIX_HTML	"htm"
+#define TEMPLATE_POSTFIX_XML	"xml"
+
+#define TEMPLATE_SEPARATOR		"_"
+#define TEMPLATE_EXTENSION_SEPARATOR	"."
+
+// base filenames for templates for prayers
+#define TEMPLATE_BASE_INVITATORIUM     "invitat"
+#define TEMPLATE_BASE_POSV_CITANIE     "posvcit"
+#define TEMPLATE_BASE_RANNE_CHVALY     "rchvaly"
+#define TEMPLATE_BASE_CEZ_DEN_9        "predpol"
+#define TEMPLATE_BASE_CEZ_DEN_12       "napol"
+#define TEMPLATE_BASE_CEZ_DEN_3        "popol"
+#define TEMPLATE_BASE_VESPERY          "vespery"
+#define TEMPLATE_BASE_KOMPLETORIUM     "komplet"
+#define TEMPLATE_BASE_STATIC_TEXT      "text" // MODL_NEURCENA
+#define TEMPLATE_BASE_EMPTY            STR_EMPTY
+
+// HTML file templates for prayers
+#define TEMPLATE_HTML_INVITATORIUM     TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_INVITATORIUM "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_POSV_CITANIE     TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_POSV_CITANIE	"" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_RANNE_CHVALY     TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_RANNE_CHVALY	"" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_CEZ_DEN_9        TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_CEZ_DEN_9    "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_CEZ_DEN_12       TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_CEZ_DEN_12  	"" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_CEZ_DEN_3        TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_CEZ_DEN_3   	"" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_VESPERY          TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_VESPERY      "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_KOMPLETORIUM     TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_KOMPLETORIUM	"" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_STATIC_TEXT      TEMPLATE_PREFIX_HTML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_STATIC_TEXT 	"" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_HTML
+#define TEMPLATE_HTML_EMPTY            STR_EMPTY
+
+// HTML file templates for prayers
+#define TEMPLATE_XML_INVITATORIUM     TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_INVITATORIUM "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_POSV_CITANIE     TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_POSV_CITANIE "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_RANNE_CHVALY     TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_RANNE_CHVALY "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_CEZ_DEN_9        TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_CEZ_DEN_9    "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_CEZ_DEN_12       TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_CEZ_DEN_12   "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_CEZ_DEN_3        TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_CEZ_DEN_3    "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_VESPERY          TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_VESPERY      "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_KOMPLETORIUM     TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_KOMPLETORIUM "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_STATIC_TEXT      TEMPLATE_PREFIX_XML "" TEMPLATE_SEPARATOR "" TEMPLATE_BASE_STATIC_TEXT  "" TEMPLATE_EXTENSION_SEPARATOR "" TEMPLATE_POSTFIX_XML
+#define TEMPLATE_XML_EMPTY            STR_EMPTY
 
 // compline in Ordinary time
 #define nazov_obd_KOMPLETORIUM   "cezrok_k.htm"
@@ -665,6 +698,10 @@ extern const char *FILE_INFO[POCET_INFO_TEXTOV + 1];
 // odkaz na žalm 95
 #define PARAM_LINK_ZALM95_BEGIN				"z95"
 #define PARAM_LINK_ZALM95_END				SYMBOL_END "" PARAM_LINK_ZALM95_BEGIN
+
+// zobrazenie znakov kurzívou (podmienečné)
+#define PARAM_ITALICS_COND_BEGIN			"i"
+#define PARAM_ITALICS_COND_END				SYMBOL_END "" PARAM_ITALICS_COND_BEGIN
 
 // full text of psalms (also verses omitted from official Latin LH)
 #define PARAM_PSALM_FULL_TEXT_BEGIN         "full-text"
@@ -990,7 +1027,7 @@ extern const char *nazov_slavenia_lokal[];
 #define LOKAL_SLAV_KONSEKR_KOSTOLY					18
 #define LOKAL_SLAV_DRUHA_VELK_NEDELA				19
 #define LOKAL_SLAV_KONIEC_OKTAVY_NAR				20
-#define LOKAL_SLAV_free_1		21 // free
+#define LOKAL_SLAV_OCD_IT							21
 #define LOKAL_SLAV_PRAHA_PATRON						22
 #define LOKAL_SLAV_PRAHA							23
 #define LOKAL_SLAV_BRNO								24
@@ -1131,9 +1168,11 @@ extern const char *nazov_slavenia_lokal[];
 #define KALENDAR_VSEOBECNY_BY              21
 #define KALENDAR_CZ_OFM                    22
 #define KALENDAR_SK_CSA                    23
+#define KALENDAR_SK_OSU                    24
+#define KALENDAR_HU_SJ                     25
 
 /* INCREMENT_FOR_NEW_CALENDAR */
-#define POCET_KALENDAROV                   23
+#define POCET_KALENDAROV                   25
 // when adding new calendar, the following comments MUST BE replaced:
 // 
 // few numeric/string constants [ADD_VALUE_FOR_NEW_CALENDAR]
@@ -1187,14 +1226,14 @@ const short int supported_languages[POCET_JAZYKOV + 1] =
 };
 
 
-#define SUPPORTED_CALENDARS_COUNT_MAX 10
+#define SUPPORTED_CALENDARS_COUNT_MAX 11
 
 // count of supported calendars for specified language
 // note 1: KALENDAR_NEURCENY & KALENDAR_VSEOBECNY are always supported by default so these two do not count there
 // note 2: for calendars not yet published use '#if defined(DEBUG) || defined(OS_Windows_Ruby)' == code to be executed only for development (new calendars are added at the end of list supported_calendars_language[][])
 const short int supported_calendars_count[POCET_JAZYKOV + 1] =
 {
-	10,
+	11,
 #if defined(DEBUG) || defined(OS_Windows_Ruby)
 	6,
 #else
@@ -1204,7 +1243,7 @@ const short int supported_calendars_count[POCET_JAZYKOV + 1] =
 	/* ToDo */ 1,
 	/* ToDo */ 1,
 	1,
-	3,
+	4,
 	1,
 	1,
 	/* ADD_VALUE_FOR_NEW_LANGUAGE */
@@ -1213,13 +1252,13 @@ const short int supported_calendars_count[POCET_JAZYKOV + 1] =
 // array of supported calendars for specified language | note: pad with zeros
 const short int supported_calendars_language[POCET_JAZYKOV + 1][SUPPORTED_CALENDARS_COUNT_MAX] =
 {
-	{ KALENDAR_VSEOBECNY_SK, KALENDAR_SK_CSSR, KALENDAR_SK_SVD, KALENDAR_SK_OFM, KALENDAR_SK_SDB, KALENDAR_SK_OP, KALENDAR_SK_SJ, KALENDAR_SK_CM, KALENDAR_SK_OCD, KALENDAR_SK_CSA },
+	{ KALENDAR_VSEOBECNY_SK, KALENDAR_SK_CSSR, KALENDAR_SK_SVD, KALENDAR_SK_OFM, KALENDAR_SK_SDB, KALENDAR_SK_OP, KALENDAR_SK_SJ, KALENDAR_SK_CM, KALENDAR_SK_OCD, KALENDAR_SK_CSA, KALENDAR_SK_OSU },
 	{ KALENDAR_VSEOBECNY_CZ, KALENDAR_CZ_OPRAEM, KALENDAR_CZ_OFMCAP, KALENDAR_CZ_SDB, KALENDAR_CZ_OFM, KALENDAR_CZ_CSSR, 0, 0, 0 },
 	/* ToDo */ { KALENDAR_VSEOBECNY, 0, 0, 0, 0, 0, 0, 0, 0 },
 	/* ToDo */ { KALENDAR_VSEOBECNY, 0, 0, 0, 0, 0, 0, 0, 0 },
 	/* ToDo */ { KALENDAR_VSEOBECNY, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ KALENDAR_CZ_OP, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ KALENDAR_VSEOBECNY_HU, KALENDAR_HU_OFM, KALENDAR_HU_SVD, 0, 0, 0, 0, 0, 0 },
+	{ KALENDAR_VSEOBECNY_HU, KALENDAR_HU_OFM, KALENDAR_HU_SVD, KALENDAR_HU_SJ, 0, 0, 0, 0, 0 },
 	{ KALENDAR_VSEOBECNY_RU, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ KALENDAR_VSEOBECNY_BY, 0, 0, 0, 0, 0, 0, 0, 0 },
 	/* ADD_VALUE_FOR_NEW_LANGUAGE */
@@ -1485,7 +1524,7 @@ extern long _global_force_opt[POCET_GLOBAL_OPT];
 #define USE_STR_OPT           -2
 #define USE_STR_FORCE_OPT     -1
 
-#define POCET_OPT_0_SPECIALNE               13 // jednotlivé komponenty option 0 -- bity pre force option 0
+#define POCET_OPT_0_SPECIALNE               14 // jednotlivé komponenty option 0 -- bity pre force option 0
 extern long _global_opt_0_specialne[POCET_OPT_0_SPECIALNE];
 // 2011-04-08: úprava významu (a interpretácie) option 0 ==  OPT_0_SPECIALNE (zobraziť/nezobraziť "pridanú hodnotu" oproti papierovej LH)
 #define BIT_OPT_0_VERSE                      1 // export also verse numbers
@@ -1501,6 +1540,7 @@ extern long _global_opt_0_specialne[POCET_OPT_0_SPECIALNE];
 #define BIT_OPT_0_TRANSPARENT_NAV         1024 // transparent navigation arrow in text
 #define BIT_OPT_0_ZALMY_FULL_TEXT         2048 // display full text of psalms (also with carets from official LH edition, e. g. verse 6 in psalm 110)
 #define BIT_OPT_0_REF_BIBLE_COM           4096 // precondition: BIT_OPT_0_REFERENCIE must be true; instead of standard URL, generates link to bible.com
+#define BIT_OPT_0_ITALICS_CONDITIONAL     8192 // display text in italics (conditional), e. g. elisions
 
 #define POCET_OPT_1_CASTI_MODLITBY          19 // jednotlivé komponenty option 1 -- bity pre force option 1
 extern long _global_opt_1_casti_modlitby[POCET_OPT_1_CASTI_MODLITBY];

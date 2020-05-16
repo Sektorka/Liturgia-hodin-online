@@ -498,6 +498,14 @@ extern short int query_type; // contains constants PRM_...
 #define STR_FORCE_BIT_OPT_0_REF_BIBLE_COM "of0bc"
 #endif
 
+// podmienečné zobrazenie textu kurzívou
+#define FORCE_BIT_OPT_0_ITALICS_CONDITIONAL 142
+#ifdef LONG_PARAM_NAMES
+#define STR_FORCE_BIT_OPT_0_ITALICS_CONDITIONAL "FORCE_BIT_OPT_0_ITALICS_CONDITIONAL"
+#else
+#define STR_FORCE_BIT_OPT_0_ITALICS_CONDITIONAL "of0ic"
+#endif
+
 // liturgické čítania
 #define FORCE_BIT_OPT_0_CIT 63
 #ifdef LONG_PARAM_NAMES
@@ -1121,15 +1129,17 @@ extern short int query_type; // contains constants PRM_...
 #endif
 
 #define ALERT	{\
-	Log("ALERT\n");\
-	hlavicka((char *)html_title[_global_jazyk]);\
-	char pom2[MAX_STR];\
-	mystrcpy(pom2, STR_EMPTY, MAX_STR);\
-	char pom3[MAX_STR];\
-	mystrcpy(pom3, STR_EMPTY, MAX_STR);\
-	prilep_request_options(pom2, pom3);\
-	_export_rozbor_dna_buttons_dni_dnes(EXPORT_DNES_DNES_ANO_SPEC, NIE /* som_v_tabulke */, pom2, NIE /* zobraz_odkaz_na_skrytie */);\
-	}
+	if(query_type != PRM_XML){\
+		Log("ALERT\n");\
+		hlavicka((char *)html_title[_global_jazyk]);\
+		char pom2[MAX_STR];\
+		mystrcpy(pom2, STR_EMPTY, MAX_STR);\
+		char pom3[MAX_STR];\
+		mystrcpy(pom3, STR_EMPTY, MAX_STR);\
+		prilep_request_options(pom2, pom3);\
+		_export_rozbor_dna_buttons_dni_dnes(EXPORT_DNES_DNES_ANO_SPEC, NIE /* som_v_tabulke */, pom2, NIE /* zobraz_odkaz_na_skrytie */);\
+	}\
+}
 
 // used in interpretParameter()
 #define HTML_SEQUENCE_NONE       0
@@ -1169,6 +1179,8 @@ extern short int query_type; // contains constants PRM_...
 
 // main XML element
 #define XML_MAIN             "LHData"
+#define XML_ERROR            "LHError"
+#define XML_TITLE            "PrayerTitle"
 
 // element XML_DAY with sub-elements
 #define XML_DAY              "CalendarDay"
@@ -1197,6 +1209,13 @@ extern short int query_type; // contains constants PRM_...
 #define XML_LIT_COLOR        "LiturgicalCelebrationColor"
 #define XML_LIT_CALENDAR     "LiturgicalCalendar"
 #define XML_LIT_READINGS     "LiturgicalReadingsId"
+
+// element XML_INDEX with sub-elements
+#define XML_INDEX            "Index" // pointing to structure _struct_anchor_and_file primarily used as 'filename/anchor within that file' structure; may be transformed to DB structure
+
+#define XML_FILENAME         "FileName"
+#define XML_ANCHOR           "Anchor"
+#define XML_LOCATION_ID      "LocationId"
 
 // element XML_INFO with sub-elements
 #define XML_INFO             "Info"
@@ -1253,6 +1272,7 @@ extern short int query_type; // contains constants PRM_...
 #define XML_BIT_OPT_0_TRANSPARENT_NAV           "BitOpt0TransparentNav"
 #define XML_BIT_OPT_0_ZALMY_FULL_TEXT           "BitOpt0PsalmsFullText"
 #define XML_BIT_OPT_0_REF_BIBLE_COM             "BitOpt0ReferencesBibleDotCom"
+#define XML_BIT_OPT_0_ITALICS_CONDITIONAL       "BitOpt0ItalicsConditional"
 
 // POCET_OPT_1_CASTI_MODLITBY
 #define XML_BIT_OPT_1_TEDEUM                    "BitOpt1TeDeum"

@@ -20,6 +20,7 @@
 #include "common.h"
 #include "myexpt.h"
 #include "mysysdef.h"
+#include "mydefs.h"
 
 char FILE_EXPORT[MAX_STR] = DEFAULT_FILE_EXPORT;
 
@@ -34,6 +35,7 @@ FILE *exportfile;
 
 char *exptstr = NULL;
 int exptstrlen = 0;
+int exptstrsize = 0;
 
 short int initExport(void){
 #if defined(EXPORT_TO_FILE)
@@ -52,7 +54,12 @@ short int initExport(void){
 	exptused = SUCCESS;
 #elif defined(EXPORT_TO_STRING)
 	free(exptstr);
-	exptstr = NULL;
+	exptstr = (char *)calloc(1, MAX_STR);
+	if (exptstr) {
+		exptstrsize = MAX_STR;
+	} else {
+		exptstrsize = 0;
+	}
 	exptstrlen = 0;
 	exptused = SUCCESS;
 #else
@@ -96,6 +103,23 @@ void dumpFile(char *fname){
 #define va_copy(dst, src) ((void)((dst) = (src)))
 #endif
 
+// Make sure that exptstr accomodates at least cnt more bytes. If memory
+// allocation fails, return 0 and reset lengths to 0.
+bool ExpandExptstr(int cnt) {
+	if (exptstrlen + cnt >= exptstrsize) {
+		while (exptstrlen + cnt >= exptstrsize) {
+			exptstrsize *= 2;
+		}
+		exptstr = (char *)realloc(exptstr, exptstrsize);
+		if (!exptstr) {
+			exptstrlen = 0;
+			exptstrsize = 0;
+			return false;
+		}
+	}
+	return true;
+}
+
 short int Export_to_string(const char *fmt, va_list argptr) {
 	short int cnt;
 	va_list argptr2;
@@ -104,11 +128,7 @@ short int Export_to_string(const char *fmt, va_list argptr) {
 	cnt = vsnprintf(NULL, 0, fmt, argptr2);
 	va_end(argptr2);
 
-	exptstr = (char *)realloc(exptstr, exptstrlen + cnt + 1);
-	if (!exptstr) {
-		exptstrlen = 0;
-		return 0;
-	}
+	if (!ExpandExptstr(cnt)) return 0;
 
 	cnt = vsnprintf(exptstr + exptstrlen, cnt + 1, fmt, argptr);
 	exptstrlen += cnt;
@@ -144,8 +164,8 @@ short int Export(const char *fmt, ...){
 	return(cnt);
 }
 
-short int ExportHtmlComment(const char *fmt, ...){
-	
+short int ExportHtmlComment(const char* fmt, ...) {
+
 	va_list argptr;
 	short int cnt = Export("\n" HTML_COMMENT_BEGIN);
 
@@ -153,19 +173,44 @@ short int ExportHtmlComment(const char *fmt, ...){
 #ifdef EXPORT_TO_STRING
 	cnt += Export_to_string(fmt, argptr);
 #else
-	if (exptused == SUCCESS){
+	if (exptused == SUCCESS) {
 		cnt += vfprintf(exportfile, fmt, argptr);
-		if (isbothExports){
+		if (isbothExports) {
 			cnt += vprintf(fmt, argptr);
 		}
 	}
-	else{
+	else {
 		cnt += vprintf(fmt, argptr);
 	}
 #endif /* EXPORT_TO_STRING */
 	va_end(argptr);
 
 	cnt += Export(HTML_COMMENT_END "\n");
+	return(cnt);
+}
+
+short int ExportXmlError(const char* fmt, ...) {
+
+	va_list argptr;
+	short int cnt = Export("\n" ELEM_BEGIN(XML_ERROR) "\n");
+
+	va_start(argptr, fmt);
+#ifdef EXPORT_TO_STRING
+	cnt += Export_to_string(fmt, argptr);
+#else
+	if (exptused == SUCCESS) {
+		cnt += vfprintf(exportfile, fmt, argptr);
+		if (isbothExports) {
+			cnt += vprintf(fmt, argptr);
+		}
+	}
+	else {
+		cnt += vprintf(fmt, argptr);
+	}
+#endif /* EXPORT_TO_STRING */
+	va_end(argptr);
+
+	cnt += Export("\n" ELEM_END(XML_ERROR) "\n");
 	return(cnt);
 }
 
@@ -203,11 +248,19 @@ char *getExportedString(void) {
 
 // Converts wide char into utf8 string and exports it.
 void ExportRawWchar(int c) {
+#ifdef EXPORT_TO_STRING
+	if (!ExpandExptstr(5)) return;
+	char *out = exptstr + exptstrlen;
+	EncodeWchar(c, &out);
+	*out = 0;
+	exptstrlen = (int)(out - exptstr);
+#else
 	char buf[5];
 	char *out = buf;
 	EncodeWchar(c, &out);
 	*out = 0;
 	Export("%s", buf);
+#endif
 }// ExportRawWchar()
 
 void ExportChar(int c, short int skip_chars_for_voice_output /* = NIE */) {

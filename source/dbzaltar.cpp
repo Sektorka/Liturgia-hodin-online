@@ -696,11 +696,13 @@ void _set_zalm1(short int modlitba, const char *file, const char *anchor) {
 		mystrcpy(_global_modl_cez_den_9.zalm1.file, file, MAX_STR_AF_FILE);
 		mystrcpy(_global_modl_cez_den_9.zalm1.anchor, anchor, MAX_STR_AF_ANCHOR);
 		if (modlitba == MODL_PREDPOLUDNIM) break;
+		// [[fallthrough]];
 	case MODL_NAPOLUDNIE:
 		// napoludnie
 		mystrcpy(_global_modl_cez_den_12.zalm1.file, file, MAX_STR_AF_FILE);
 		mystrcpy(_global_modl_cez_den_12.zalm1.anchor, anchor, MAX_STR_AF_ANCHOR);
 		if (modlitba == MODL_NAPOLUDNIE) break;
+		// [[fallthrough]];
 	case MODL_POPOLUDNI:
 		// popoludni
 		mystrcpy(_global_modl_cez_den_3.zalm1.file, file, MAX_STR_AF_FILE);
@@ -735,18 +737,20 @@ void _set_zalm2(short int modlitba, const char *file, const char *anchor) {
 		mystrcpy(_global_modl_ranne_chvaly.zalm2.file, file, MAX_STR_AF_FILE);
 		mystrcpy(_global_modl_ranne_chvaly.zalm2.anchor, anchor, MAX_STR_AF_ANCHOR);
 		break;
-		// modlitby cez den maju spolocnu psalmodiu, pokial si pouzivatel nevyziada doplnkovu psalmodiu (seria 1-3), preto nastavujem aj spolocne pre vsetky modlitby | 2003-08-13
+		// modlitby cez den maju spolocnu psalmodiu, pokial si pouzivatel nevyziada doplnkovu psalmodiu (seria 1-3), preto nastavujem aj spolocne pre vsetky modlitby
 	case MODL_CEZ_DEN_VSETKY:
 	case MODL_PREDPOLUDNIM:
 		// predpoludnim
 		mystrcpy(_global_modl_cez_den_9.zalm2.file, file, MAX_STR_AF_FILE);
 		mystrcpy(_global_modl_cez_den_9.zalm2.anchor, anchor, MAX_STR_AF_ANCHOR);
 		if (modlitba == MODL_PREDPOLUDNIM) break;
+		// [[fallthrough]];
 	case MODL_NAPOLUDNIE:
 		// napoludnie
 		mystrcpy(_global_modl_cez_den_12.zalm2.file, file, MAX_STR_AF_FILE);
 		mystrcpy(_global_modl_cez_den_12.zalm2.anchor, anchor, MAX_STR_AF_ANCHOR);
 		if (modlitba == MODL_NAPOLUDNIE) break;
+		// [[fallthrough]];
 	case MODL_POPOLUDNI:
 		// popoludni
 		mystrcpy(_global_modl_cez_den_3.zalm2.file, file, MAX_STR_AF_FILE);
@@ -779,14 +783,14 @@ void _set_zalm3(short int modlitba, const char *file, const char *anchor) {
 		// predpoludnim
 		mystrcpy(_global_modl_cez_den_9.zalm3.file, file, MAX_STR_AF_FILE);
 		mystrcpy(_global_modl_cez_den_9.zalm3.anchor, anchor, MAX_STR_AF_ANCHOR);
-		if (modlitba == MODL_PREDPOLUDNIM)
-			break;
+		if (modlitba == MODL_PREDPOLUDNIM) break;
+		// [[fallthrough]];
 	case MODL_NAPOLUDNIE:
 		// napoludnie
 		mystrcpy(_global_modl_cez_den_12.zalm3.file, file, MAX_STR_AF_FILE);
 		mystrcpy(_global_modl_cez_den_12.zalm3.anchor, anchor, MAX_STR_AF_ANCHOR);
-		if (modlitba == MODL_NAPOLUDNIE)
-			break;
+		if (modlitba == MODL_NAPOLUDNIE) break;
+		// [[fallthrough]];
 	case MODL_POPOLUDNI:
 		// popoludni
 		mystrcpy(_global_modl_cez_den_3.zalm3.file, file, MAX_STR_AF_FILE);
@@ -1208,6 +1212,13 @@ void _set_chvalospev_vig_sc_sm_ocd(short int modlitba) {
 	_set_chvalospev2(modlitba, "ch_sir14.htm", "CHVAL_SIR14VG");
 	_set_chvalospev3(modlitba, "ch_sir51.htm", "CHVAL_SIR51VG");
 } // _set_chvalospev_vig_sc_sm_ocd()
+
+void _set_chvalospev_vig_terezka_ocd(short int modlitba) {
+	_set_chvalospev1(modlitba, "ch_dt32.htm", "CHVAL_DT32VG");
+	_set_chvalospev2(modlitba, "ch_pies.htm", "CHVAL_PIES1VG");
+	_set_chvalospev3(modlitba, "ch_pies.htm", "CHVAL_PIES4VG");
+} // _set_chvalospev_vig_terezka_ocd()
+
 
 // files - nazvy suborov pre zaltar styroch tyzdnov
 char _file[MAX_STR_AF_FILE]; // nazov súboru, napr. _1ne.htm
@@ -2023,6 +2034,16 @@ void _set_zalmy_2nedele_mcd(void) {// modlitba cez deň; rovnaké žalmy sú pre
 	set_zalm(3, MODL_CEZ_DEN_VSETKY, "z76.htm", "ZALM76_II");
 	Log("_set_zalmy_2nedele_mcd() -- end\n");
 } // _set_zalmy_2nedele_mcd()
+
+void _set_zalmy_mcd_1nedela_or_doplnkova_psalmodia(void) {
+	// ak je modlitba cez deň na slávnosť, tak sa majú použiť žalmy z doplnkovej psalmódie
+	if (_global_den.denvt != DEN_NEDELA) {
+		_set_zalmy_mcd_doplnkova_psalmodia();
+	}
+	else if (!isGlobalOption(OPT_1_CASTI_MODLITBY, BIT_OPT_1_MCD_DOPLNKOVA)) {
+		_set_zalmy_1nedele_mcd();
+	}
+}// _set_zalmy_mcd_1nedela_or_doplnkova_psalmodia() -- ak sviatok/slávnosť padne na nedeľu, berú sa žalmy z nedele 1. týždňa (s možnosťou prepnúť na doplnkovú psalmódiu), v opačnom prípade (pre slávenie mimo nedele) je predpísaná doplnková psalmódia
 
 void _set_kompletorium_nedela_spolocne(short int modlitba) {
 	Log("_set_kompletorium_nedela_spolocne(%d - %s) -- begin\n", modlitba, nazov_modlitby(modlitba));
@@ -3179,14 +3200,7 @@ void _set_zalmy_posviacka_chramu(short int modlitba) {
 		set_zalm(3, modlitba, "z87.htm", "ZALM87");
 	}
 	else if (je_modlitba_cez_den(modlitba)) {
-		// treba riešiť, ak by padol tento sviatok na nedeľu
-		if (_global_den.denvt == DEN_NEDELA) {
-			_set_zalmy_1nedele_mcd(); // alebo ponechať z príslušnej nedele (t. j. nemeniť)? -- ako je to v set_spolocna_cast()...
-		} // DEN_NEDELA
-		else {
-			_set_zalmy_mcd_doplnkova_psalmodia();
-		}
-		_set_zalmy_mcd_doplnkova_psalmodia(!je_len_doplnkova_psalmodia(modlitba)); // toto je potrebné z technického dôvodu, pretože doplnková psalmódia bola nastavená ešte pri nastavovaní žaltára (pred vlastnými časťami svätých)
+		_set_zalmy_mcd_1nedela_or_doplnkova_psalmodia();
 	}
 	_set_mcd_doplnkova_psalmodia_z122_129(MODL_PREDPOLUDNIM); // 2013-07-04: vyňaté mimo konkrétnej modlitby | oprava zásahu z 2013-05-15 (oprava: pre 14MAJ sa omylom na MCD brali žalmy z doplnkovej psalmódie) | nevadí, že sa vykoná/nastaví viackrát...
 	Log("_set_zalmy_posviacka_chramu(%s) -- end\n", nazov_modlitby(modlitba));
@@ -3347,12 +3361,7 @@ void _set_zalmy_telakrvi(short int modlitba) {
 	}
 	// "Doplnková psalmódia. Keď sa slávnosť koná v nedeľu, žalmy sa berú z nedele prvého týždňa." SK LH, zv. III, str. 618
 	else if (je_modlitba_cez_den(modlitba)) {
-		if (_global_den.denvt == DEN_NEDELA) {
-			_set_zalmy_1nedele_mcd();
-		} // DEN_NEDELA
-		else {
-			_set_zalmy_mcd_doplnkova_psalmodia();
-		}
+		_set_zalmy_mcd_1nedela_or_doplnkova_psalmodia();
 	}
 	Log("_set_zalmy_telakrvi(%s) -- end\n", nazov_modlitby(modlitba));
 } // _set_zalmy_telakrvi()
@@ -3378,8 +3387,7 @@ void _set_zalmy_srdca(short int modlitba) {
 		_set_zalmy_1nedele_rch();
 	}
 	else if (je_modlitba_cez_den(modlitba)) {
-		// zrejme netreba riešiť, ak by padol tento sviatok na nedeľu
-		_set_zalmy_mcd_doplnkova_psalmodia();
+		_set_zalmy_mcd_1nedela_or_doplnkova_psalmodia();
 	}
 	Log("_set_zalmy_srdca(%s) -- end\n", nazov_modlitby(modlitba));
 } // _set_zalmy_srdca()
@@ -4334,6 +4342,22 @@ void _set_zalmy_vesp_113_146_ef(short int modlitba){
 	Log("_set_zalmy_vesp_113_146_ef(%s) -- end\n", nazov_modlitby(modlitba));
 }// _set_zalmy_vesp_113_146_ef()
 
+// OSU (27JAN)
+void _set_zalmy_osu_angela_merici(short int modlitba) {
+	Log("_set_zalmy_osu_angela_merici(%s) -- begin\n", nazov_modlitby(modlitba));
+	if (modlitba == MODL_POSV_CITANIE) {
+		set_zalm(1, modlitba, "z19.htm", "ZALM19,8-15");
+		set_zalm(2, modlitba, "z45.htm", "ZALM45_I");
+		set_zalm(3, modlitba, "z45.htm", "ZALM45_II");
+	}
+	else if (modlitba == MODL_VESPERY) {
+		set_zalm(1, modlitba, "z110.htm", "ZALM110");
+		set_zalm(2, modlitba, "z122.htm", "ZALM122");
+		set_zalm(3, modlitba, "ch_zjv19.htm", "CHVAL_ZJV19");
+	}
+	Log("_set_zalmy_osu_angela_merici(%s) -- end\n", nazov_modlitby(modlitba));
+}// _set_zalmy_osu_angela_merici()
+
 // CZ OFMCAP (11AUG); CZ OP (28JAN)
 void _set_zalmy_vesp_127_111_kol(short int modlitba){
 	Log("_set_zalmy_vesp_127_111_kol(%s) -- begin\n", nazov_modlitby(modlitba));
@@ -4541,7 +4565,7 @@ void _vlastne_slavenie_hymnus(short int modlitba, char vlastny_anchor[SMALL], sh
 void _velk1_hymnus(short int den, short int modlitba, short int litobd) {
 	Log("_velk1_hymnus(): začiatok\n");
 	short int ktory; // 0 alebo 1 (2 = obidve alternatívy; -1 = do not use this variable for generating anchor)
-	short int bit;
+	short int bit = BIT_OPT_5_HYMNUS_VN_RCH; // necessary to initialize
 
 	switch (modlitba) {
 	case MODL_POSV_CITANIE: bit = BIT_OPT_5_HYMNUS_VN_PC; break;
@@ -5860,7 +5884,7 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 // switch(litobd), case OBD_OKTAVA_NARODENIA -- begin -----------------------------------------
 
 		// narodenie Pana -- 1. jan.
-		case OBD_OKTAVA_NARODENIA:
+		case OBD_OKTAVA_NARODENIA: {
 
 			// tu v skutočnosti začína VIANOČNÁ OKTÁVA = OKTÁVA NARODENIA PÁNA
 
@@ -5872,9 +5896,12 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 
 			Log("OBD_OKTAVA_NARODENIA - pokračujeme ako vianočné obdobie I...\n");
 			// a pokracujeme ako vianocne obdobie I
+		}
+		// [[fallthrough]];
 
 // switch(litobd), case OBD_VIANOCNE_I -- begin -----------------------------------------------
-		case OBD_VIANOCNE_I :// do slavnosti zjavenia pana
+		// do slavnosti zjavenia pana
+		case OBD_VIANOCNE_I: {
 			Log("OBD_VIANOCNE_I\n");
 
 			// tu v skutočnosti začína VIANOČNÉ OBDOBIE I.
@@ -6075,10 +6102,8 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 				modlitba = MODL_POPOLUDNI;
 				_bohorod_kcitanie(_anchor_vlastne_slavenie);
 				_bohorod_modlitba;
-				// doplnená psalmódia: Ak nie je nedeľa, berie sa doplnková psalmódia. (LH, zv. I, str. 372)
-				if (_global_den.denvt != DEN_NEDELA) {
-					_set_zalmy_mcd_doplnkova_psalmodia();
-				}
+
+				_set_zalmy_mcd_1nedela_or_doplnkova_psalmodia();
 
 				if ((_global_jazyk == JAZYK_SK) && (_global_kalendar == KALENDAR_SK_SJ)) {
 					file_name_vlastny_kalendar(_global_kalendar);
@@ -6214,14 +6239,7 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 				_vlastne_slavenie_set_vig_ev_litrok(_anchor_vlastne_slavenie, _global_den.litrok);
 
 				// modlitba cez deň
-
-				// ak je modlitba cez deň na slávnosť, tak sa majú použiť žalmy z doplnkovej psalmódie
-				if (_global_den.denvt != DEN_NEDELA) {
-					_set_zalmy_mcd_doplnkova_psalmodia();
-				}
-				else {
-					_set_zalmy_1nedele_mcd();
-				}
+				_set_zalmy_mcd_1nedela_or_doplnkova_psalmodia();
 
 				modlitba = MODL_PREDPOLUDNIM;
 				_vlastne_slavenie_kcitanie(_anchor_vlastne_slavenie);
@@ -6242,7 +6260,8 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 				// hoci sú vo vlastnej časti uvedené aj antifóny pre modlitbu cez deň, sú rovnaké ako pre vianočné obdobie, preto netreba nastavovať
 
 			}// _global_den.denvr == _global_r._SVATEJ_RODINY.denvr
-			break;
+		}
+		break;
 // switch(litobd), case OBD_OKTAVA_NARODENIA -- end -------------------------------------------
 // switch(litobd), case OBD_VIANOCNE_I -- end -------------------------------------------------
 
@@ -6650,7 +6669,7 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 // switch(litobd), case OBD_VIANOCNE_II -- end ------------------------------------------------
 
 // switch(litobd), case OBD_CEZ_ROK -- begin --------------------------------------------------
-		case OBD_CEZ_ROK:{
+		case OBD_CEZ_ROK: {
 			Log("OBD_CEZ_ROK\n");
 
 			// tu v skutočnosti začína CEZROČNÉ OBDOBIE
@@ -7852,19 +7871,36 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 	_set_antifona1(modlitba, _file, _anchor);\
 	set_LOG_litobd;\
 }
-// pre Trojdnie nie je použitý _special_anchor_prefix pre CZ (nie sú hymny k volnému výběru)
+// pre Trojdnie nie je použitý _special_anchor_prefix pre CZ (nie sú hymny k volnému výběru) -- okrem nedele, kedy môžeme vziať z OBD_VELKONOCNE_I (treba zmeniť _file resp. _file_pc a potom vrátiť späť)
 #define _vtroj_hymnus {\
-	c = pismenko_modlitby(modlitba);\
-	if(modlitba == MODL_PRVE_VESPERY)\
-		c = pismenko_modlitby(MODL_VESPERY);\
-	sprintf(_anchor, "%s_%c%s%s", nazov_OBD[OBD_VELKONOCNE_TROJDNIE], c, nazov_DN_asci[den], ANCHOR_HYMNUS);\
-	if(modlitba == MODL_POSV_CITANIE){\
-		_set_hymnus(modlitba, _file_pc, _anchor);\
-		set_LOG_litobd_pc;\
+	if((den == DEN_NEDELA) && (_global_jazyk == JAZYK_CZ) && (je_CZ_hymny_k_volnemu_vyberu)){\
+		if(modlitba == MODL_POSV_CITANIE){\
+			file_name_litobd_pc(OBD_VELKONOCNE_I);\
+		}\
+		else{\
+			file_name_litobd(OBD_VELKONOCNE_I);\
+		}\
+		_velk1_hymnus(den, modlitba, OBD_VELKONOCNE_I);\
+		if(modlitba == MODL_POSV_CITANIE){\
+			file_name_litobd_pc(litobd);\
+		}\
+		else{\
+			file_name_litobd(litobd);\
+		}\
 	}\
 	else{\
-		_set_hymnus(modlitba, _file, _anchor);\
-		set_LOG_litobd;\
+		c = pismenko_modlitby(modlitba);\
+		if(modlitba == MODL_PRVE_VESPERY)\
+			c = pismenko_modlitby(MODL_VESPERY);\
+		sprintf(_anchor, "%s_%c%s%s", nazov_OBD[OBD_VELKONOCNE_TROJDNIE], c, nazov_DN_asci[den], ANCHOR_HYMNUS);\
+		if(modlitba == MODL_POSV_CITANIE){\
+			_set_hymnus(modlitba, _file_pc, _anchor);\
+			set_LOG_litobd_pc;\
+		}\
+		else{\
+			_set_hymnus(modlitba, _file, _anchor);\
+			set_LOG_litobd;\
+		}\
 	}\
 }
 #define _vtroj_kcitanie {\
@@ -8940,7 +8976,7 @@ void liturgicke_obdobie(short int litobd, short int tyzden, short int den, short
 			}// nedeľa
 
 			// override hymnov v prípade je_CZ_hymny_k_volnemu_vyberu
-			if ((_global_jazyk == JAZYK_CZ) && (je_CZ_hymny_k_volnemu_vyberu)) {
+			if (je_CZ_hymny_k_volnemu_vyberu) {
 
 				file_name_litobd(OBD_VELKONOCNE_I);
 				mystrcpy(_file_pc, nazov_obd_htm_pc[OBD_VELKONOCNE_I], MAX_STR_AF_FILE);
@@ -10592,8 +10628,9 @@ void __set_spolocna_cast(short int a, short int poradie_svaty, _struct_sc sc, in
 			_set_zalmy_posviacka_chramu(modlitba);
 		}
 		_spolocna_cast_full(modlitba);
-		if((_global_den.litobd == OBD_VELKONOCNE_I) || (_global_den.litobd == OBD_VELKONOCNE_II))
+		if ((_global_den.litobd == OBD_VELKONOCNE_I) || (_global_den.litobd == OBD_VELKONOCNE_II)) {
 			_spolocna_cast_kresp_ve;
+		}
 
 		// žalmy sa berú ako vo všedný deň, antifóny z vlastnej časti
 		// vyriešené aj pre výročie posviacky Lateránskej baziliky (sviatok; nemajú sa vziať antifóny a žalmy zo spoločnej časti, ale zo dňa)
@@ -10623,6 +10660,18 @@ void __set_spolocna_cast(short int a, short int poradie_svaty, _struct_sc sc, in
 		}// v OBD_OKTAVA_NARODENIA -- vešpery sú zo dňa
 
 	}// MODL_SPOL_CAST_POSVIACKA_CHRAMU
+
+	if (_je_global_den_slavnost) {
+		modlitba = MODL_KOMPLETORIUM;
+		if (_global_den.den != DEN_NEDELA) {
+			// kompletórium zo slávnosti mimo nedieľ
+			_set_kompletorium_slavnost(modlitba);
+		}
+		else {
+			// kompletórium z nedele
+			_set_kompletorium_nedela(modlitba);
+		}
+	}
 
 	Log("_set_spolocna_cast(%s) -- end\n", nazov_spolc(a));
 }// _set_spolocna_cast(); -- dva argumenty
@@ -10833,9 +10882,9 @@ _struct_anchor_and_count pocet_hymnus_multi_anchor_count[] = {
 	{ JAZYK_CZ, "VTROJ_9NEHYMNUS", 2 },
 	{ JAZYK_CZ, "VTROJ_2NEHYMNUS", 2 },
 	{ JAZYK_CZ, "VTROJ_3NEHYMNUS", 2 },
-	{ JAZYK_CZ, "VN1_9HYMNUS", 3 },
-	{ JAZYK_CZ, "VN1_2HYMNUS", 3 },
-	{ JAZYK_CZ, "VN1_3HYMNUS", 3 },
+	{ JAZYK_CZ, "VN1_9HYMNUS", 2 },
+	{ JAZYK_CZ, "VN1_2HYMNUS", 2 },
+	{ JAZYK_CZ, "VN1_3HYMNUS", 2 },
 	{ JAZYK_CZ, "p_HYMNUS_NE", 2 },
 	{ JAZYK_CZ, "k_HYMNUS_SO", 2 },
 	{ JAZYK_CZ, "k_HYMNUS_NE", 2 },
